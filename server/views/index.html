@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+    <head>
+        <meta http-equiv="refresh" content="15">
+        <title>{{.Title}}</title>
+        <style>
+            table td,th{
+                border:1px black solid;
+            }
+            </style>
+    </head>
+    <body>
+        <div><h3>{{.Title}}</h3></div>
+        {{$status:=.Payload}}
+
+        <table width="300px">
+            <head>
+                <tr>
+                    <th>Object</th>
+                    <th>Value</th>
+                    <th>Status</th>
+                </tr>
+            </head>
+            <body>
+                <tr>
+                    <td>Water</td>
+                    <td><div id="water"></div></td>
+                    <td><div id="water-risk"></div></td>
+                </tr>
+                <tr>
+                    <td>Wind</td>
+                    <td><div id="wind"></div></td>
+                    <td><div id="wind-risk"></div></td>
+                </tr>
+            </body>
+        </table>
+        <script>
+            fetch("/weather")
+            .then(x=>x.json())
+            .then(data=>setData(data));
+            function setData(a){
+                var water = document.getElementById("water");
+                var water_risk = document.getElementById("water-risk");
+                var wind = document.getElementById("wind");
+                var wind_risk = document.getElementById("wind-risk");
+                water.innerText = a.status.water + " meter";
+                wind.innerText = a.status.wind + " meter/detik";
+                if(a.status.water>8){
+                    water_risk.innerText = "Bahaya";
+                }else if(a.status.water>=6 && a.status.water <=8){
+                    water_risk.innerText = "Siaga";
+                }else{
+                    water_risk.innerText = "Aman";
+                }
+                if(a.status.wind>15){
+                    wind_risk.innerText = "Bahaya";
+                }else if(a.status.wind>=7 && a.status.wind <=15){
+                    wind_risk.innerText = "Siaga";
+                }else{
+                    wind_risk.innerText = "Aman";
+                }
+            }
+        </script>
+    </body>
+    </html>
